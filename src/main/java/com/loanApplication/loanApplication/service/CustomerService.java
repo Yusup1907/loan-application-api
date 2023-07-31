@@ -22,7 +22,7 @@ public class CustomerService {
         if (isValidCustomerData(customer)) {
             return customerRepository.save(customer);
         } else {
-            System.out.println("Gagal menyimpan data pelanggan: Data tidak valid.");
+            System.out.println("Gagal menyimpan data customer: Data tidak valid.");
             return null;
         }
     }
@@ -33,6 +33,27 @@ public class CustomerService {
 
     public Customer getCustomerById(Long id) {
         return customerRepository.findById(id).orElse(null);
+    }
+
+    public int updateCustomer(Customer customer) {
+        if (isValidCustomerData(customer)) {
+            return customerRepository.updateCustomer(
+                    customer.getId(),
+                    customer.getFull_name(),
+                    customer.getAddress(),
+                    customer.getNik(),
+                    customer.getPhone_number(),
+                    customer.getUser_id(),
+                    customer.getNo_kk(),
+                    customer.getEmergency_name(),
+                    customer.getEmergency_contact(),
+                    customer.getLast_salary(),
+                    customer.getUpdated_at()
+            );
+        } else {
+            System.out.println("Gagal mengupdate data customer: Data tidak valid.");
+            return 0;
+        }
     }
 
     private boolean isValidCustomerData(Customer customer) {
