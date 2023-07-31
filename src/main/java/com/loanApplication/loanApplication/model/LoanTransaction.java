@@ -62,6 +62,21 @@ public class LoanTransaction {
     }
 
     public LoanTransaction(Customer customer, LocalDateTime loanDate, LocalDateTime dueDate, double amount,
+                           String description, boolean status, double payment, String repayment, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.customer = customer;
+        this.loanDate = loanDate;
+        this.dueDate = dueDate;
+        this.amount = amount;
+        this.description = description;
+        this.status = status;
+        this.payment = payment;
+        this.repayment = repayment;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    // Constructor for denied loan without payment and repayment
+    public LoanTransaction(Customer customer, LocalDateTime loanDate, LocalDateTime dueDate, double amount,
                            String description, boolean status, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.customer = customer;
         this.loanDate = loanDate;
@@ -72,4 +87,5 @@ public class LoanTransaction {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
+
 }

@@ -2,6 +2,7 @@ package com.loanApplication.loanApplication.service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,18 +27,22 @@ public class LoanTransactionService {
     }
 
     public LoanTransaction createLoanTransaction(Long customerId, double amount, String description) {
-        Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new EntityNotFoundException("Customer with ID " + customerId + " not found."));
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new EntityNotFoundException("Customer with ID " + customerId + " not found."));
 
         // Validate customer data
-        if (!isValidCustomerData(customer)) {
-            // If customer data is not valid, set status to "Denied"
-            return saveLoanTransaction(customer, LocalDateTime.now(), null, amount, description, false, LocalDateTime.now(), LocalDateTime.now());
-        } else {
-            // If all customer data is valid, set status to "Approved" and calculate due date
-            LocalDateTime loanDate = LocalDateTime.now();
-            LocalDateTime dueDate = loanDate.plus(2, ChronoUnit.MONTHS);
-            return saveLoanTransaction(customer, loanDate, dueDate, amount, description, true, LocalDateTime.now(), LocalDateTime.now());
-        }
+        boolean isValidCustomerData = isValidCustomerData(customer);
+
+        // Set status and dueDate based on validation result
+        boolean status = isValidCustomerData;
+        String repayment = isValidCustomerData ? "Belum Lunas" : ""; // Set repayment status
+
+        LocalDateTime loanDate = LocalDateTime.now();
+        LocalDateTime dueDate = isValidCustomerData ? loanDate.plus(2, ChronoUnit.MONTHS) : null;
+
+        // Save LoanTransaction entity
+        LoanTransaction loanTransaction = new LoanTransaction(customer, loanDate, dueDate, amount, description, status, 0.0, repayment, LocalDateTime.now(), LocalDateTime.now());
+        return loanTransactionRepository.save(loanTransaction);
     }
 
     private boolean isValidCustomerData(Customer customer) {
@@ -51,10 +56,7 @@ public class LoanTransactionService {
         return isValidNik && isValidNoKk && isValidEmergencyContact && isValidEmergencyName && isValidLastSalary;
     }
 
-    private LoanTransaction saveLoanTransaction(Customer customer, LocalDateTime loanDate, LocalDateTime dueDate,
-                                                 double amount, String description, boolean status,
-                                                 LocalDateTime createdAt, LocalDateTime updatedAt) {
-        LoanTransaction loanTransaction = new LoanTransaction(customer, loanDate, dueDate, amount, description, status, createdAt, updatedAt);
-        return loanTransactionRepository.save(loanTransaction);
+    public List<LoanTransaction> findAllByRepaymentStatus(String repayment) {
+        return loanTransactionRepository.findAllByRepaymentStatus(repayment);
     }
 }
