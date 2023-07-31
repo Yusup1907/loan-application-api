@@ -95,4 +95,15 @@ public class LoanTransactionService {
 
         return true; // Mengembalikan true menunjukkan bahwa pembayaran berhasil
     }
+
+    public double getIncomeBetweenDates(String startDate, String endDate) {
+        List<Double> payments = loanTransactionRepository.findIncomeBetweenDates(startDate, endDate);
+
+        double totalIncome = 0.0;
+        for (Double payment : payments) {
+            totalIncome += payment;
+        }
+
+        return totalIncome;
+    }
 }

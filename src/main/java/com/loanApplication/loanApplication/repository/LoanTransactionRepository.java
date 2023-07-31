@@ -27,9 +27,13 @@ public interface LoanTransactionRepository extends JpaRepository<LoanTransaction
     List<LoanTransaction> findAllByRepaymentStatus(@Param("repayment") String repayment);
 
     @Modifying
-    @Query(value = "UPDATE trx_loan SET customer_id = ?1, repayment_date = ?2, payment = ?3, repayment = ?4, updated_at = ?5 " +
+    @Query(value = "UPDATE trx_loan SET customer_id = ?1, repayment_date = ?2, payment = ?3, repayment = ?4, updated_at = ?5 "
+            +
             "WHERE id = ?6", nativeQuery = true)
     void updateLoanTransaction(Long customerId, LocalDateTime paymentDate, double payment,
-                               String repayment, LocalDateTime updatedAt, Long Id);    
+            String repayment, LocalDateTime updatedAt, Long Id);
+
+    @Query(value = "SELECT payment FROM trx_loan WHERE DATE(payment_date) >= DATE(?1) AND DATE(payment_date) <= DATE(?2)", nativeQuery = true)
+    List<Double> findIncomeBetweenDates(String startDate, String endDate);
 
 }

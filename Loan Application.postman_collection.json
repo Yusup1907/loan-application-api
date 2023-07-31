@@ -1,0 +1,244 @@
+{
+	"info": {
+		"_postman_id": "ecde8251-6666-4d43-93c9-a5187745884f",
+		"name": "Loan Application",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18972809",
+		"_collection_link": "https://adidayasolusitek.postman.co/workspace/latihan~1f67210e-5527-472d-9477-fbf6de0aa437/collection/18972809-ecde8251-6666-4d43-93c9-a5187745884f?action=share&creator=18972809&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Customer",
+			"item": [
+				{
+					"name": "add Customer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \r\n            \"full_name\": \"Faisal Ramadhan\",\r\n            \"address\": \"Jl. Kebumen no 45\",\r\n            \"nik\": \"378918979\",\r\n            \"phone_number\": \"087838599668\",\r\n            \"no_kk\": \"378928678994\",\r\n            \"user_id\": 2,\r\n            \"emergency_name\": \"Gama Sakti A\",\r\n            \"emergency_contact\": \"087857361891\",\r\n            \"last_salary\":2800000 \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/customers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Customer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/api/customers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Customer By Id",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Update Customer",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n            \"full_name\": \"Faisal Ramadhan Yusup\",\r\n            \"address\": \"Jl. Kebumen no 45\",\r\n            \"nik\": \"378918979876546\",\r\n            \"phone_number\": \"087838599668\",\r\n            \"no_kk\": \"3789286789942345\",\r\n            \"user_id\": 2,\r\n            \"emergency_name\": \"Gama Sakti A\",\r\n            \"emergency_contact\": \"087857361891\",\r\n            \"last_salary\":2800000 \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/customers/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"customers",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Customer",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/api/customers/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"customers",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Loan Transaction",
+			"item": [
+				{
+					"name": "loan-application",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"customerId\": 7,\r\n    \"amount\": 5000000,\r\n    \"description\": \"Pengajuan peminjaman untuk keperluan bisnis\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/loan-application",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"loan-application"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Repayment Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/api/loan-application?repayment=Lunas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"loan-application"
+							],
+							"query": [
+								{
+									"key": "repayment",
+									"value": "Lunas"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Payment Loan",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"paymentDate\": \"2023-08-30T16:30:00\", \r\n    \"payment\": 20000\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/8/make-payment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"8",
+								"make-payment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Income Report",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/api/income-report?start_date=2023-01-01&end_date=2023-12-31",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"income-report"
+							],
+							"query": [
+								{
+									"key": "start_date",
+									"value": "2023-01-01"
+								},
+								{
+									"key": "end_date",
+									"value": "2023-12-31"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
