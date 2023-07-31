@@ -28,6 +28,9 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     @Query(value = "SELECT * FROM mst_customer WHERE id = :id", nativeQuery = true)
     Customer findCustomerById(@Param("id") Long id);
 
+    @Query(value = "SELECT * FROM mst_customer WHERE full_name = :name", nativeQuery = true)
+    List<Customer> findCustomersByName(@Param("name") String name);
+
     @Modifying
     @Query(value = "UPDATE mst_customer SET full_name = :full_name, address = :address, nik = :nik, phone_number = :phone_number, user_id = :user_id, no_kk = :no_kk, emergency_name = :emergency_name, emergency_contact = :emergency_contact, last_salary = :last_salary, updated_at = :updated_at WHERE id = :id", nativeQuery = true)
     int updateCustomer(
@@ -42,5 +45,9 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
             String emergency_contact,
             Long last_salary,
             LocalDateTime updated_at);
+
+    @Modifying
+    @Query(value = "DELETE FROM mst_customer WHERE id = :id", nativeQuery = true)
+    int deleteCustomerById(@Param("id") Long id);
 
 }

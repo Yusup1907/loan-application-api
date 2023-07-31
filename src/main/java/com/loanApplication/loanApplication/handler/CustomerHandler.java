@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -55,12 +56,32 @@ public class CustomerHandler {
         }
     }
 
+    @GetMapping("/customers/{name}")
+    public ResponseEntity<List<Customer>> getCustomersByName(@PathVariable String name) {
+        List<Customer> customers = customerService.findCustomersByName(name);
+        if (!customers.isEmpty()) {
+            return ResponseEntity.ok(customers);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PutMapping("/customers/{id}")
     public ResponseEntity<String> updateCustomer(@PathVariable Long id, @RequestBody Customer customer) {
         customer.setId(id);
         int updatedRows = customerService.updateCustomer(customer);
         if (updatedRows > 0) {
             return ResponseEntity.ok("Customer data updated successfully");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/customers/{id}")
+    public ResponseEntity<String> deleteCustomer(@PathVariable Long id) {
+        boolean isDeleted = customerService.deleteCustomerById(id);
+        if (isDeleted) {
+            return ResponseEntity.ok("Customer with Id " + id + " has been deleted.");
         } else {
             return ResponseEntity.notFound().build();
         }

@@ -35,6 +35,10 @@ public class CustomerService {
         return customerRepository.findById(id).orElse(null);
     }
 
+    public List<Customer> findCustomersByName(String name) {
+        return customerRepository.findCustomersByName(name);
+    }
+
     public int updateCustomer(Customer customer) {
         if (isValidCustomerData(customer)) {
             return customerRepository.updateCustomer(
@@ -48,11 +52,19 @@ public class CustomerService {
                     customer.getEmergency_name(),
                     customer.getEmergency_contact(),
                     customer.getLast_salary(),
-                    customer.getUpdated_at()
-            );
+                    customer.getUpdated_at());
         } else {
             System.out.println("Gagal mengupdate data customer: Data tidak valid.");
             return 0;
+        }
+    }
+
+    public boolean deleteCustomerById(Long id) {
+        if (customerRepository.existsById(id)) {
+            customerRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
         }
     }
 
