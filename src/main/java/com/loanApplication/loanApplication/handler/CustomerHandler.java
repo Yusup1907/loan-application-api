@@ -1,8 +1,11 @@
 package com.loanApplication.loanApplication.handler;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,10 +32,15 @@ public class CustomerHandler {
             String successMessage = "Your data has been successfully added.";
             return ResponseEntity.status(HttpStatus.CREATED).body(successMessage);
         } else {
-            // In case the customer creation fails, you can return an appropriate error
-            // response.
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    // Handler untuk menampilkan list customer
+    @GetMapping("/customers")
+    public ResponseEntity<List<Customer>> getAllCustomers() {
+        List<Customer> customers = customerService.getAllCustomers();
+        return new ResponseEntity<>(customers, HttpStatus.OK);
     }
 
 }

@@ -1,5 +1,7 @@
 package com.loanApplication.loanApplication.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,14 +27,21 @@ public class CustomerService {
         }
     }
 
+    public List<Customer> getAllCustomers() {
+        return customerRepository.getAllCustomers();
+    }
+
     private boolean isValidCustomerData(Customer customer) {
         // Perform native validation here
         boolean isValidFullName = customer.getFull_name() != null && customer.getFull_name().length() >= 3;
-        boolean isValidPhoneNumber = customer.getPhone_number() != null && customer.getPhone_number().matches("\\d{11,12}");
+        boolean isValidPhoneNumber = customer.getPhone_number() != null
+                && customer.getPhone_number().matches("\\d{11,12}");
+        boolean isValidEmergencyContact = customer.getEmergency_contact() != null
+                && customer.getEmergency_contact().matches("\\d{11,12}");
         boolean isValidNik = customer.getNik() != null && customer.getNik().matches("\\d{16}");
         boolean isValidNoKk = customer.getNo_kk() != null && customer.getNo_kk().matches("\\d{16}");
 
-        return isValidFullName && isValidPhoneNumber && isValidNik && isValidNoKk;
+        return isValidFullName && isValidPhoneNumber && isValidEmergencyContact && isValidNik && isValidNoKk;
     }
 
     // tambahkan metode lain untuk operasi lainnya pada Customer jika diperlukan
