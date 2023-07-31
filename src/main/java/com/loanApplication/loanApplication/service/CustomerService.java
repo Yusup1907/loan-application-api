@@ -31,6 +31,10 @@ public class CustomerService {
         return customerRepository.getAllCustomers();
     }
 
+    public Customer getCustomerById(Long id) {
+        return customerRepository.findById(id).orElse(null);
+    }
+
     private boolean isValidCustomerData(Customer customer) {
         // Perform native validation here
         boolean isValidFullName = customer.getFull_name() != null && customer.getFull_name().length() >= 3;
