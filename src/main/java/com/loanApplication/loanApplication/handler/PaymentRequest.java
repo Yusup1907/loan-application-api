@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 public class PaymentRequest {
     private String paymentDate;
-    private double paymentAmount;
+    private double payment;
 }

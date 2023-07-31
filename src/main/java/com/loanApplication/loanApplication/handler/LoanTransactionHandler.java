@@ -1,6 +1,5 @@
 package com.loanApplication.loanApplication.handler;
 
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.loanApplication.loanApplication.model.LoanTransaction;
 import com.loanApplication.loanApplication.service.LoanTransactionService;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @RestController
 @RequestMapping("/api")
 public class LoanTransactionHandler {
@@ -33,7 +34,8 @@ public class LoanTransactionHandler {
     @PostMapping("/loan-application")
     public ResponseEntity<LoanTransaction> createLoanTransaction(@RequestBody LoanTransactionRequest request) {
         try {
-            LoanTransaction loanTransaction = loanTransactionService.createLoanTransaction(request.getCustomerId(), request.getAmount(), request.getDescription());
+            LoanTransaction loanTransaction = loanTransactionService.createLoanTransaction(request.getCustomerId(),
+                    request.getAmount(), request.getDescription());
             return new ResponseEntity<>(loanTransaction, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -60,16 +62,19 @@ public class LoanTransactionHandler {
     public ResponseEntity<String> makePayment(@PathVariable Long customerId,
                                               @RequestBody PaymentRequest paymentRequest) {
         LocalDateTime paymentDate = LocalDateTime.parse(paymentRequest.getPaymentDate());
-        double paymentAmount = paymentRequest.getPaymentAmount();
+        double payment = paymentRequest.getPayment();
 
-        boolean paymentStatus = loanTransactionService.makePayment(customerId, paymentDate, paymentAmount);
-
-        if (paymentStatus) {
-            return ResponseEntity.ok("Payment was successful.");
-        } else {
-            return ResponseEntity.badRequest().body("Payment failed.");
+        try {
+            boolean paymentStatus = loanTransactionService.makePayment(customerId, paymentDate, payment);
+            if (paymentStatus) {
+                return ResponseEntity.ok("Payment was successful.");
+            } else {
+                return ResponseEntity.badRequest().body("Payment failed.");
+            }
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
-    
 }

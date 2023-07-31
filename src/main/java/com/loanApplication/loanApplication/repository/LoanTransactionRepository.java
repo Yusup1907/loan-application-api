@@ -13,7 +13,7 @@ import com.loanApplication.loanApplication.model.LoanTransaction;
 
 @Repository
 public interface LoanTransactionRepository extends JpaRepository<LoanTransaction, Long> {
-    LoanTransaction findCustomerById(Long customerId);
+    List<LoanTransaction> findByCustomerId(Long customerId);
 
     @Modifying
     @Query(value = "INSERT INTO trx_loan (customer_id, loan_date, due_date, amount, description, status, repayment, created_at, updated_at) "

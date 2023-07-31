@@ -21,7 +21,8 @@ public class LoanTransactionService {
     private final CustomerRepository customerRepository;
 
     @Autowired
-    public LoanTransactionService(LoanTransactionRepository loanTransactionRepository, CustomerRepository customerRepository) {
+    public LoanTransactionService(LoanTransactionRepository loanTransactionRepository,
+            CustomerRepository customerRepository) {
         this.loanTransactionRepository = loanTransactionRepository;
         this.customerRepository = customerRepository;
     }
@@ -41,7 +42,8 @@ public class LoanTransactionService {
         LocalDateTime dueDate = isValidCustomerData ? loanDate.plus(2, ChronoUnit.MONTHS) : null;
 
         // Save LoanTransaction entity
-        LoanTransaction loanTransaction = new LoanTransaction(customer, loanDate, dueDate, amount, description, status, 0.0, repayment, LocalDateTime.now(), LocalDateTime.now());
+        LoanTransaction loanTransaction = new LoanTransaction(customer, loanDate, dueDate, amount, description, status,
+                0.0, repayment, LocalDateTime.now(), LocalDateTime.now());
         return loanTransactionRepository.save(loanTransaction);
     }
 
@@ -49,7 +51,8 @@ public class LoanTransactionService {
         // Perform validation on customer data
         boolean isValidNik = customer.getNik() != null && customer.getNik().matches("\\d{16}");
         boolean isValidNoKk = customer.getNo_kk() != null && customer.getNo_kk().matches("\\d{16}");
-        boolean isValidEmergencyContact = customer.getEmergency_contact() != null && customer.getEmergency_contact().matches("\\d{11,12}");
+        boolean isValidEmergencyContact = customer.getEmergency_contact() != null
+                && customer.getEmergency_contact().matches("\\d{11,12}");
         boolean isValidEmergencyName = customer.getEmergency_name() != null && !customer.getEmergency_name().isEmpty();
         boolean isValidLastSalary = customer.getLast_salary() != null && customer.getLast_salary() > 0;
 
@@ -62,10 +65,12 @@ public class LoanTransactionService {
 
     public boolean makePayment(Long customerId, LocalDateTime paymentDate, double payment) {
         // Cari data pinjaman berdasarkan customerId
-        LoanTransaction loanTransaction = loanTransactionRepository.findCustomerById(customerId);
-        if (loanTransaction == null) {
-            throw new EntityNotFoundException("LoanTransaction dengan customerId " + customerId + " tidak ditemukan.");
+        List<LoanTransaction> loanTransactions = loanTransactionRepository.findByCustomerId(customerId);
+        if (loanTransactions.isEmpty()) {
+            throw new EntityNotFoundException("LoanTransaction with customerId " + customerId + " not found.");
         }
+
+        LoanTransaction loanTransaction = loanTransactions.get(0);
 
         // Validasi apakah sudah melewati masa tenggat
         LocalDateTime dueDate = loanTransaction.getDueDate();
@@ -75,7 +80,7 @@ public class LoanTransactionService {
 
         // Validasi apakah pembayaran sesuai dengan amount atau jumlah pinjaman
         double amount = loanTransaction.getAmount();
-        if (Math.abs(payment - amount) > 0.001) {
+        if (Math.abs(payment - amount) >= 0.001) {
             throw new IllegalArgumentException("Jumlah pembayaran harus sama dengan jumlah pinjaman.");
         }
 
