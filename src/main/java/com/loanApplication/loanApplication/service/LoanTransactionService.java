@@ -59,4 +59,35 @@ public class LoanTransactionService {
     public List<LoanTransaction> findAllByRepaymentStatus(String repayment) {
         return loanTransactionRepository.findAllByRepaymentStatus(repayment);
     }
+
+    public boolean makePayment(Long customerId, LocalDateTime paymentDate, double payment) {
+        // Cari data pinjaman berdasarkan customerId
+        LoanTransaction loanTransaction = loanTransactionRepository.findCustomerById(customerId);
+        if (loanTransaction == null) {
+            throw new EntityNotFoundException("LoanTransaction dengan customerId " + customerId + " tidak ditemukan.");
+        }
+
+        // Validasi apakah sudah melewati masa tenggat
+        LocalDateTime dueDate = loanTransaction.getDueDate();
+        if (dueDate != null && paymentDate.isAfter(dueDate)) {
+            throw new IllegalArgumentException("Tanggal pembayaran tidak boleh melebihi tanggal jatuh tempo.");
+        }
+
+        // Validasi apakah pembayaran sesuai dengan amount atau jumlah pinjaman
+        double amount = loanTransaction.getAmount();
+        if (Math.abs(payment - amount) > 0.001) {
+            throw new IllegalArgumentException("Jumlah pembayaran harus sama dengan jumlah pinjaman.");
+        }
+
+        // Jika pembayaran sudah sesuai, update status dan tanggal pembayaran
+        loanTransaction.setPayment(payment);
+        loanTransaction.setPaymentDate(paymentDate);
+        loanTransaction.setRepayment("Lunas");
+        loanTransaction.setUpdatedAt(LocalDateTime.now());
+
+        // Simpan perubahan ke database
+        loanTransactionRepository.save(loanTransaction);
+
+        return true; // Mengembalikan true menunjukkan bahwa pembayaran berhasil
+    }
 }
