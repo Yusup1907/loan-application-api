@@ -56,7 +56,7 @@ public class CustomerHandler {
         }
     }
 
-    @GetMapping("/customers/{name}")
+    @GetMapping("/customer/{name}")
     public ResponseEntity<List<Customer>> getCustomersByName(@PathVariable String name) {
         List<Customer> customers = customerService.findCustomersByName(name);
         if (!customers.isEmpty()) {
